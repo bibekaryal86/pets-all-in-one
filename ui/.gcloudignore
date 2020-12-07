@@ -1,0 +1,12 @@
+.gcloudignore
+.project
+.classpath
+.settings/
+
+# Target directory for maven builds
+target/
+# Build directory for gradle builds
+build/
+
+# AWS configurations
+src/main/webapp/.ebextensions/

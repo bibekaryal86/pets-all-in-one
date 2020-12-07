@@ -1,0 +1,15 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pets.ui.mpa.all</groupId>
+		<artifactId>pets.ui.mpa.all</artifactId>
+		<version>1.0.1</version>
+	</parent>
+	<artifactId>models</artifactId>
+	<packaging>jar</packaging>
+	<properties>
+		<jar.finalName>pets-models-1.0.1</jar.finalName>
+	</properties>
+</project>

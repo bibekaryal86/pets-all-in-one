@@ -27,5 +27,5 @@
 /ui/target
 /ui/.classpath
 /ui/.project
-ui/src/main/webapp/.ebextensions
+
 /ui/src/main/webapp/WEB-INF/appengine-web.xml

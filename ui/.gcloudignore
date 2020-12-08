@@ -10,3 +10,5 @@ build/
 
 # AWS configurations
 src/main/webapp/.ebextensions/
+# Sample appengine-web.xml
+src/main/webapp/WEB-INF/appengine-web-dummy.xml

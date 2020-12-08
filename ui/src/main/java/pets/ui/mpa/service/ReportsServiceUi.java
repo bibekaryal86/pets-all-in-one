@@ -1,11 +1,15 @@
 package pets.ui.mpa.service;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import pets.models.model.ReportsResponse;
+import pets.models.model.Status;
 import pets.ui.mpa.connector.ReportsConnectorUi;
 import pets.ui.mpa.model.ReportsModel;
 
@@ -21,9 +25,17 @@ public class ReportsServiceUi {
 	
 	public ReportsModel getCurrentBalancesReport(String username) {
 		try {
-			return ReportsModel.builder()
-					.reportCurrentBalances(reportsConnector.getCurrentBalancesReport(username).getReportCurrentBalances())
-					.build();
+			ReportsResponse reportsResponse = reportsConnector.getCurrentBalancesReport(username);
+			
+			if (reportsResponse.getStatus() != null && hasText(reportsResponse.getStatus().getErrMsg())) {
+				return ReportsModel.builder()
+						.errMsg(errMsg(username, "Current Balances Report", reportsResponse.getStatus()))
+						.build();
+			} else {
+				return ReportsModel.builder()
+						.reportCurrentBalances(reportsResponse.getReportCurrentBalances())
+						.build();
+			}
 		} catch (Exception ex) {
 			return ReportsModel.builder()
 					.errMsg(errMsg(username, ex, "Current Balances Report"))
@@ -37,12 +49,22 @@ public class ReportsServiceUi {
 	
 	public ReportsModel getCashFlowsReport(String username, int selectedYear) {
 		try {
-			return ReportsModel.builder()
-					.selectedYear(String.valueOf(selectedYear))
-					.reportCashFlows(reportsConnector.getCashFlowsReport(username, selectedYear).getReportCashFlows())
-					.build();
+			ReportsResponse reportsResponse = reportsConnector.getCashFlowsReport(username, selectedYear);
+			
+			if (reportsResponse.getStatus() != null && hasText(reportsResponse.getStatus().getErrMsg())) {
+				return ReportsModel.builder()
+						.selectedYear(String.valueOf(selectedYear))
+						.errMsg(errMsg(username, "Cash Flows Report", reportsResponse.getStatus()))
+						.build();
+			} else {
+				return ReportsModel.builder()
+						.selectedYear(String.valueOf(selectedYear))
+						.reportCashFlows(reportsResponse.getReportCashFlows())
+						.build();
+			}
 		} catch (Exception ex) {
 			return ReportsModel.builder()
+					.selectedYear(String.valueOf(selectedYear))
 					.errMsg(errMsg(username, ex, "Cash Flows Report"))
 					.build();
 		}
@@ -54,12 +76,22 @@ public class ReportsServiceUi {
 	
 	public ReportsModel getCategoriesReport(String username, int selectedYear) {
 		try {
-			return ReportsModel.builder()
-					.selectedYear(String.valueOf(selectedYear))
-					.reportCategoryTypes(reportsConnector.getCategoriesReport(username, selectedYear).getReportCategoryTypes())
-					.build();
+			ReportsResponse reportsResponse = reportsConnector.getCategoriesReport(username, selectedYear);
+			
+			if (reportsResponse.getStatus() != null && hasText(reportsResponse.getStatus().getErrMsg())) {
+				return ReportsModel.builder()
+						.selectedYear(String.valueOf(selectedYear))
+						.errMsg(errMsg(username, "Categories Report", reportsResponse.getStatus()))
+						.build();
+			} else {
+				return ReportsModel.builder()
+						.selectedYear(String.valueOf(selectedYear))
+						.reportCategoryTypes(reportsResponse.getReportCategoryTypes())
+						.build();
+			}
 		} catch (Exception ex) {
 			return ReportsModel.builder()
+					.selectedYear(String.valueOf(selectedYear))
 					.errMsg(errMsg(username, ex, "Categories Report"))
 					.build();
 		}
@@ -69,9 +101,13 @@ public class ReportsServiceUi {
 		return CompletableFuture.supplyAsync(() -> getCategoriesReport(username, selectedYear));
 	}
 	
+	private String errMsg(String username, String methodName, Status status) {
+		logger.error("Error in {}: {} | {}", username, methodName, status);
+		return status.getErrMsg();
+	}
+	
 	private String errMsg(String username, Exception ex, String methodName) {
-		logger.error("Exception in {}: {}", methodName, username, ex);
+		logger.error("Exception in {}: {}", username, methodName, ex);
 		return String.format("Error in %s! Please Try Again!!!", methodName);
 	}
-
 }

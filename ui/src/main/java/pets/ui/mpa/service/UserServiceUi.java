@@ -1,5 +1,7 @@
 package pets.ui.mpa.service;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import pets.models.model.UserResponse;
 import pets.ui.mpa.connector.UserConnectorUi;;
 
 @Service
@@ -26,7 +29,14 @@ public class UserServiceUi implements UserDetailsService {
 
 	public pets.models.model.User getUserByUsername(String username) {
 		try {
-			return userConnector.getUserByUsername(username).getUsers().get(0);
+			UserResponse userResponse = userConnector.getUserByUsername(username);
+			
+			if (userResponse.getStatus() != null && hasText(userResponse.getStatus().getErrMsg())) {
+				logger.error("Error in Get User By Username: {} | {}", username, userResponse.getStatus());
+				return null;
+			} else {
+				return userConnector.getUserByUsername(username).getUsers().get(0);
+			}
 		} catch (Exception ex) {
 			logger.error("Exception in Get User By Username: {}", username, ex);
 			return null;

@@ -97,7 +97,7 @@ public class TransactionHelper {
                 .filter(transaction -> transaction.getAccount().getId().equals(accountId))
                 .collect(toList());
         List<Transaction> fromTrfAccountId = transactions.stream()
-                .filter(transaction -> transaction.getTrfAccount() != null)
+                .filter(transaction -> transaction.getTrfAccount() != null && hasText(transaction.getTrfAccount().getId()))
                 .filter(transaction -> transaction.getTrfAccount().getId().equals(accountId))
                 .collect(toList());
         if (!fromTrfAccountId.isEmpty()) {

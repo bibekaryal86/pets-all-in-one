@@ -33,7 +33,10 @@ public class Commons {
 	}
 	
 	private static Account convertDtoToEntityAccount(final AccountDto accountDto) {
-		if (accountDto == null) return null;
+		if (accountDto == null) {
+			return Account.builder()
+					.build();
+		}
 		
 		return Account.builder()
 				.id(accountDto.getId())
@@ -55,7 +58,10 @@ public class Commons {
 	}
 	
 	private static RefAccountType convertDtoToEntityRefAccountType(final RefAccountTypeDto refAccountTypeDto) {
-		if (refAccountTypeDto == null) return null;
+		if (refAccountTypeDto == null) {
+			return RefAccountType.builder()
+					.build();
+		}
 		
 		return RefAccountType.builder()
 				.id(refAccountTypeDto.getId())
@@ -72,7 +78,10 @@ public class Commons {
 	}
 	
 	private static RefBank convertDtoToEntityRefBank(final RefBankDto refBankDto) {
-		if (refBankDto == null) return null;
+		if (refBankDto == null) {
+			return RefBank.builder()
+					.build();
+		}
 		
 		return RefBank.builder()
 				.id(refBankDto.getId())
@@ -88,8 +97,11 @@ public class Commons {
 				.collect(toList());
 	}
 	
-	private static RefCategory convertDtoToEntityRefCategory(final  RefCategoryDto refCategoryDto) {
-		if (refCategoryDto == null) return null;
+	private static RefCategory convertDtoToEntityRefCategory(final RefCategoryDto refCategoryDto) {
+		if (refCategoryDto == null) {
+			return RefCategory.builder()
+					.build();
+		}
 		
 		return RefCategory.builder()
 				.id(refCategoryDto.getId())
@@ -107,7 +119,10 @@ public class Commons {
 	}
 	
 	private static RefCategoryType convertDtoToEntityRefCategoryType(final RefCategoryTypeDto refCategoryTypeDto) {
-		if (refCategoryTypeDto == null) return null;
+		if (refCategoryTypeDto == null) {
+			return RefCategoryType.builder()
+					.build();
+		}
 		
 		return RefCategoryType.builder()
 				.id(refCategoryTypeDto.getId())
@@ -124,7 +139,10 @@ public class Commons {
 	}
 	
 	private static RefMerchant convertDtoToEntityRefMerchant(final RefMerchantDto refMerchantDto) {
-		if (refMerchantDto == null) return null;
+		if (refMerchantDto == null) {
+			return RefMerchant.builder()
+					.build();
+		}
 		
 		return RefMerchant.builder()
 				.id(refMerchantDto.getId())
@@ -142,7 +160,10 @@ public class Commons {
 	}
 	
 	private static RefTransactionType convertDtoToEntityRefTransactionType(final RefTransactionTypeDto refTransactionTypeDto) {
-		if (refTransactionTypeDto == null) return null;
+		if (refTransactionTypeDto == null) {
+			return RefTransactionType.builder()
+					.build();
+		}
 		
 		return RefTransactionType.builder()
 				.id(refTransactionTypeDto.getId())
@@ -159,7 +180,10 @@ public class Commons {
 	}
 	
 	private static Transaction convertDtoToEntityTransaction(final TransactionDto transactionDto) {
-		if (transactionDto == null) return null;
+		if (transactionDto == null) {
+			return Transaction.builder()
+					.build();
+		}
 		
 		return Transaction.builder()
 				.id(transactionDto.getId())

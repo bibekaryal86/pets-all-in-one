@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import pets.models.model.Status;
 import pets.models.model.Transaction;
 import pets.models.model.TransactionFilters;
 import pets.models.model.TransactionRequest;
@@ -142,8 +143,13 @@ public class TransactionServiceUi {
 		}
 	}
 	
+	private String errMsg(String username, String methodName, Status status) {
+		logger.error("Error in {}: {}", methodName, username, status);
+		return status.getErrMsg();
+	}
+	
 	private String errMsg(String username, Exception ex, String methodName) {
-		logger.error("Exception in {}: {}", methodName, username, ex);
+		logger.error("Exception in {}: {}", username, methodName, ex);
 		return String.format("Error in %s! Please Try Again!!!", methodName);
 	}
 	

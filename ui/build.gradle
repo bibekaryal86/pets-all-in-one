@@ -22,7 +22,7 @@ dependencies {
 }
 
 war {
-	archiveBaseName = 'pets-ui-mpa'
+	archiveBaseName = 'pets-all-in-one'
     archiveVersion = ''
 }
 

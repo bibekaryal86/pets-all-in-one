@@ -172,7 +172,7 @@
 				<version>3.3.1</version>
 				<configuration>
 					<warSourceDirectory>src/main/webapp</warSourceDirectory>
-					<warName>pets-ui-mpa</warName>
+					<warName>pets-all-in-one</warName>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
@@ -191,7 +191,7 @@
 						<version>3.3.1</version>
 						<configuration>
 							<warSourceDirectory>src/main/webapp</warSourceDirectory>
-							<warName>pets-ui-mpa</warName>
+							<warName>pets-all-in-one</warName>
 							<failOnMissingWebXml>false</failOnMissingWebXml>
 							<packagingExcludes>
 								WEB-INF/appengine-web.xml,

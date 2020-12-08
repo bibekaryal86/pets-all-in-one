@@ -1,5 +1,6 @@
 package pets.ui.mpa.service;
 
+import static org.springframework.util.StringUtils.hasText;
 import static pets.ui.mpa.util.CommonUtils.formatAmountBalance;
 import static pets.ui.mpa.util.CommonUtils.toUppercase;
 import static pets.ui.mpa.util.ConstantUtils.ACCOUNT_TYPE_ID_CASH;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import pets.models.model.Account;
 import pets.models.model.AccountFilters;
 import pets.models.model.AccountRequest;
+import pets.models.model.AccountResponse;
+import pets.models.model.Status;
 import pets.ui.mpa.connector.AccountConnectorUi;
 import pets.ui.mpa.model.AccountModel;
 
@@ -28,9 +31,17 @@ public class AccountServiceUi {
 
 	public AccountModel getAccountById(String username, String id) {
 		try {
-			return AccountModel.builder()
-					.account(accountConnector.getAccountById(username, id).getAccounts().get(0))
-					.build();
+			AccountResponse accountResponse = accountConnector.getAccountById(username, id);
+			
+			if (accountResponse.getStatus() != null && hasText(accountResponse.getStatus().getErrMsg())) {
+				return AccountModel.builder()
+						.errMsg(errMsg(username, "Get Account by Id", accountResponse.getStatus()))
+						.build();
+			} else {
+				return AccountModel.builder()
+						.account(accountResponse.getAccounts().get(0))
+						.build();
+			}
 		} catch (Exception ex) {
 			return AccountModel.builder()
 					.errMsg(errMsg(username, ex, "Get Account by Id"))
@@ -40,9 +51,17 @@ public class AccountServiceUi {
 
 	public AccountModel getAccountsByUsername(String username, AccountFilters accountFilters) {
 		try {
-			return AccountModel.builder()
-					.accounts(accountConnector.getAccountsByUsername(username, accountFilters).getAccounts())
-					.build();
+			AccountResponse accountResponse = accountConnector.getAccountsByUsername(username, accountFilters);
+			
+			if (accountResponse.getStatus() != null && hasText(accountResponse.getStatus().getErrMsg())) {
+				return AccountModel.builder()
+						.errMsg(errMsg(username, "Get Accounts by Username", accountResponse.getStatus()))
+						.build();
+			} else {
+				return AccountModel.builder()
+						.accounts(accountResponse.getAccounts())
+						.build();
+			}
 		} catch (Exception ex) {
 			return AccountModel.builder()
 					.errMsg(errMsg(username, ex, "Get Accounts by Username"))
@@ -60,9 +79,18 @@ public class AccountServiceUi {
 					.typeId(account.getRefAccountType().getId())
 					.username(username)
 					.build();
-
-			return AccountModel.builder()
-					.account(accountConnector.saveNewAccount(username, accountRequest).getAccounts().get(0)).build();
+			
+			AccountResponse accountResponse = accountConnector.saveNewAccount(username, accountRequest);
+			
+			if (accountResponse.getStatus() != null && hasText(accountResponse.getStatus().getErrMsg())) {
+				return AccountModel.builder()
+						.errMsg(errMsg(username, "Save New Account", accountResponse.getStatus()))
+						.build();
+			} else {
+				return AccountModel.builder()
+						.account(accountResponse.getAccounts().get(0))
+						.build();
+			}
 		} catch (Exception ex) {
 			return AccountModel.builder()
 					.errMsg(errMsg(username, ex, "Save New Account"))
@@ -81,30 +109,51 @@ public class AccountServiceUi {
 					.username(username)
 					.build();
 
-			return AccountModel.builder()
-					.account(accountConnector.updateAccount(username, id, accountRequest).getAccounts().get(0))
-					.build();
+			AccountResponse accountResponse = accountConnector.updateAccount(username, id, accountRequest);
+			
+			if (accountResponse.getStatus() != null && hasText(accountResponse.getStatus().getErrMsg())) {
+				return AccountModel.builder()
+						.errMsg(errMsg(username, "Update Account", accountResponse.getStatus()))
+						.build();
+			} else {
+				return AccountModel.builder()
+						.account(accountResponse.getAccounts().get(0))
+						.build();
+			}
 		} catch (Exception ex) {
 			return AccountModel.builder()
-					.errMsg(errMsg(username, ex, "Update Account Request"))
+					.errMsg(errMsg(username, ex, "Update Account"))
 					.build();
 		}
 	}
 
 	public AccountModel deleteAccount(String username, String id) {
 		try {
-			return AccountModel.builder()
-					.deleteCount(accountConnector.deleteAccount(username, id).getDeleteCount().intValue())
-					.build();
+			AccountResponse accountResponse = accountConnector.deleteAccount(username, id);
+			
+			if (accountResponse.getStatus() != null && hasText(accountResponse.getStatus().getErrMsg())) {
+				return AccountModel.builder()
+						.errMsg(errMsg(username, "Delete Account", accountResponse.getStatus()))
+						.build();
+			} else {
+				return AccountModel.builder()
+						.deleteCount(accountResponse.getDeleteCount().intValue())
+						.build();
+			}
 		} catch (Exception ex) {
 			return AccountModel.builder()
 					.errMsg(errMsg(username, ex, "Delete Account"))
 					.build();
 		}
 	}
+	
+	private String errMsg(String username, String methodName, Status status) {
+		logger.error("Error in {}: {} | {}", username, methodName, status);
+		return status.getErrMsg();
+	}
 
 	private String errMsg(String username, Exception ex, String methodName) {
-		logger.error("Exception in {}: {}", methodName, username, ex);
+		logger.error("Exception in {}: {}", username, methodName, ex);
 		return String.format("Error in %s! Please Try Again!!!", methodName);
 	}
 

@@ -1,5 +1,6 @@
 package pets.ui.mpa.service;
 
+import static org.springframework.util.StringUtils.hasText;
 import static pets.ui.mpa.util.CommonUtils.removeApostropheForJavascript;
 import static pets.ui.mpa.util.CommonUtils.toUppercase;
 
@@ -7,10 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import pets.models.model.RefAccountTypeResponse;
+import pets.models.model.RefBankResponse;
 import pets.models.model.RefCategoryFilters;
+import pets.models.model.RefCategoryResponse;
+import pets.models.model.RefCategoryTypeResponse;
 import pets.models.model.RefMerchantFilters;
 import pets.models.model.RefMerchantRequest;
 import pets.models.model.RefMerchantResponse;
+import pets.models.model.RefTransactionTypeResponse;
+import pets.models.model.Status;
 import pets.ui.mpa.connector.RefTablesConnectorUi;
 import pets.ui.mpa.model.RefTablesModel;
 
@@ -27,9 +34,17 @@ public class RefTablesServiceUi {
 
 	public RefTablesModel getRefAccountTypes(String username) {
 		try {
-			return RefTablesModel.builder()
-					.refAccountTypes(refTablesConnector.getRefAccountTypes().getRefAccountTypes())
-					.build();
+			RefAccountTypeResponse refAccountTypeResponse = refTablesConnector.getRefAccountTypes();
+			
+			if (refAccountTypeResponse.getStatus() != null && hasText(refAccountTypeResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Account Types", refAccountTypeResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refAccountTypes(refAccountTypeResponse.getRefAccountTypes())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Account Types"))
@@ -39,9 +54,17 @@ public class RefTablesServiceUi {
 	
 	public RefTablesModel getRefBanks(String username) {
 		try {
-			return RefTablesModel.builder()
-					.refBanks(refTablesConnector.getRefBanks().getRefBanks())
-					.build();
+			RefBankResponse refBankResponse = refTablesConnector.getRefBanks();
+			
+			if (refBankResponse.getStatus() != null && hasText(refBankResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Banks", refBankResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refBanks(refBankResponse.getRefBanks())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Banks"))
@@ -62,10 +85,18 @@ public class RefTablesServiceUi {
 						.usedInTxnsOnly(usedInTxnsOnly)
 						.build();
 			}
-
-			return RefTablesModel.builder()
-					.refCategories(refTablesConnector.getRefCategories(username, refCategoryFilters).getRefCategories())
-					.build();
+			
+			RefCategoryResponse refCategoryResponse = refTablesConnector.getRefCategories(username, refCategoryFilters);
+			
+			if (refCategoryResponse.getStatus() != null && hasText(refCategoryResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Categories", refCategoryResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refCategories(refCategoryResponse.getRefCategories())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Categories"))
@@ -75,10 +106,17 @@ public class RefTablesServiceUi {
 	
 	public RefTablesModel getRefCategoryTypes(String username, boolean usedInTxnsOnly) {
 		try {
-			return RefTablesModel.builder()
-					.refCategoryTypes(refTablesConnector.getRefCategoryTypes(username, String.valueOf(usedInTxnsOnly))
-							.getRefCategoryTypes())
-					.build();
+			RefCategoryTypeResponse refCategoryTypeResponse = refTablesConnector.getRefCategoryTypes(username, String.valueOf(usedInTxnsOnly));
+			
+			if (refCategoryTypeResponse.getStatus() != null && hasText(refCategoryTypeResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Category Types", refCategoryTypeResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refCategoryTypes(refCategoryTypeResponse.getRefCategoryTypes())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Category Types"))
@@ -88,9 +126,17 @@ public class RefTablesServiceUi {
 	
 	public RefTablesModel getRefMerchantById(String username, String merchantId) {
 		try {
-			return RefTablesModel.builder()
-					.refMerchants(refTablesConnector.getRefMerchantById(username, merchantId).getRefMerchants())
-					.build();
+			RefMerchantResponse refMerchantResponse = refTablesConnector.getRefMerchantById(username, merchantId);
+			
+			if (refMerchantResponse.getStatus() != null && hasText(refMerchantResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Merchant By Id", refMerchantResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refMerchants(refMerchantResponse.getRefMerchants())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Merchant By Id"))
@@ -109,11 +155,17 @@ public class RefTablesServiceUi {
 			}
 
 			RefMerchantResponse refMerchantResponse = refTablesConnector.getRefMerchantsByUsername(username, refMerchantFilters);
-
-			return RefTablesModel.builder()
-					.refMerchants(refMerchantResponse.getRefMerchants())
-					.refMerchantsFilterList(refMerchantResponse.getRefMerchantsFilterList())
-					.build();
+			
+			if (refMerchantResponse.getStatus() != null && hasText(refMerchantResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Merchants", refMerchantResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refMerchants(refMerchantResponse.getRefMerchants())
+						.refMerchantsFilterList(refMerchantResponse.getRefMerchantsFilterList())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Merchants"))
@@ -128,10 +180,17 @@ public class RefTablesServiceUi {
 					.description(toUppercase(removeApostropheForJavascript(description)))
 					.build();
 			
-			return RefTablesModel.builder()
-					.refMerchants(
-							refTablesConnector.updateRefMerchant(id, refMerchantRequest).getRefMerchants())
-					.build();
+			RefMerchantResponse refMerchantResponse = refTablesConnector.updateRefMerchant(id, refMerchantRequest);
+			
+			if (refMerchantResponse.getStatus() != null && hasText(refMerchantResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Update Ref Merchant", refMerchantResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refMerchants(refMerchantResponse.getRefMerchants())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Update Ref Merchant"))
@@ -141,9 +200,17 @@ public class RefTablesServiceUi {
 
 	public RefTablesModel deleteRefMerchant(String username, String id) {
 		try {
-			return RefTablesModel.builder()
-					.deleteCount(refTablesConnector.deleteRefMerchant(username, id).getDeleteCount().intValue())
-					.build();
+			RefMerchantResponse refMerchantResponse = refTablesConnector.deleteRefMerchant(username, id);
+			
+			if (refMerchantResponse.getStatus() != null && hasText(refMerchantResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Delete Ref Merchant", refMerchantResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.deleteCount(refMerchantResponse.getDeleteCount().intValue())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Delete Ref Merchant"))
@@ -153,9 +220,17 @@ public class RefTablesServiceUi {
 
 	public RefTablesModel getRefTransactionTypes(String username) {
 		try {
-			return RefTablesModel.builder()
-					.refTransactionTypes(refTablesConnector.getRefTransactionTypes().getRefTransactionTypes())
-					.build();
+			RefTransactionTypeResponse refTransactionTypeResponse = refTablesConnector.getRefTransactionTypes();
+			
+			if (refTransactionTypeResponse.getStatus() != null && hasText(refTransactionTypeResponse.getStatus().getErrMsg())) {
+				return RefTablesModel.builder()
+						.errMsg(errMsg(username, "Get Ref Transaction Types", refTransactionTypeResponse.getStatus()))
+						.build();
+			} else {
+				return RefTablesModel.builder()
+						.refTransactionTypes(refTransactionTypeResponse.getRefTransactionTypes())
+						.build();
+			}
 		} catch (Exception ex) {
 			return RefTablesModel.builder()
 					.errMsg(errMsg(username, ex, "Get Ref Transaction Types"))
@@ -163,8 +238,13 @@ public class RefTablesServiceUi {
 		}
 	}
 	
+	private String errMsg(String username, String methodName, Status status) {
+		logger.error("Error in {}: {} | {}", username, methodName, status);
+		return status.getErrMsg();
+	}
+	
 	private String errMsg(String username, Exception ex, String methodName) {
-		logger.error("Exception in {}: {}", methodName, username, ex);
+		logger.error("Exception in {}: {}", username, methodName, ex);
 		return String.format("Error in %s! Please Try Again!!!", methodName);
 	}
 }

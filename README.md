@@ -1,7 +1,7 @@
 # pets-all-in-one
 Maven / Gradle Multi Module Single PETS app
 
-This is a monolith app uses Spring MVC with JSP, and combines most of the functionalities of the following five apps:
+This is a monolith app (has been replaced with microservices/SPA) uses Spring MVC with JSP, and combines most of the functionalities of the following five apps:
 * https://github.com/bibekaryal86/pets-database-layer
 * https://github.com/bibekaryal86/pets-service-layer
 * https://github.com/bibekaryal86/pets-authenticate-layer

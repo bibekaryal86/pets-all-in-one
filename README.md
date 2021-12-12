@@ -1,7 +1,7 @@
 # pets-all-in-ne
 Maven / Gradle Multi Module Single PETS app
 
-This app is one monolith app which combines most of the functionalities of the following five apps:
+This is a monolith app uses Spring MVC with JSP, and combines most of the functionalities of the following five apps:
 * https://github.com/bibekaryal86/pets-database-layer
 * https://github.com/bibekaryal86/pets-service-layer
 * https://github.com/bibekaryal86/pets-authenticate-layer
@@ -10,11 +10,7 @@ This app is one monolith app which combines most of the functionalities of the f
 
 Instead of separate apps for database, business, authenticate, gateway and ui layers, the separate logic are placed in different modules - database, service, ui, and a common module for model/pojos. There is no need for gateway and authenticate layers which are handled within this single app.
 
-THe app does not have Spring Boot starter, so the generated war does not have embedded container. Hence the app needs to be loaded to outside container (Tomcat/Jetty) to run.
-
-To run the app, first create WAR file:
-* For WAR file to upload to Google Cloud Project, use `mvn clean package`
-* For WAR file to upload to AWS Elastic Beanstalk or docker or locally, use `mvn clean package -P development`. This excludes GCP related dependencies.
+The app does not have Spring Boot starter, so the generated war does not have embedded container. Hence the app needs to be loaded to outside container (Tomcat/Jetty) to run.
 
 When running the app, we need to supply the following environment variables to the container:
 * Active Profile:
@@ -25,6 +21,18 @@ When running the app, we need to supply the following environment variables to t
   * MONGODB_ACC_NAME (account name of database)
   * MONGODB_USR_NAME (database username)
   * MONGODB_USR_PWD (database password)
+
+To run the app, first create WAR file:
+* For WAR file to upload to Google Cloud Project, use `mvn clean package`
+* For WAR file to upload to AWS Elastic Beanstalk or docker or locally, use `mvn clean package -P development`. This excludes GCP related dependencies.
+
+After creating the WAR file, the app can be run as:
+* Local: Use container like Tomcat. This can be used as well: https://github.com/bibekaryal86/simple-jetty-container
+* Docker: For local deployment, docker can be used as well, although this repo does not contain `Dockerfile`
+* AWS: Upload the WAR file to Elastic Beanstalk, set the environment variables, and that should be it. The `.ebextensions` folder in `src/main/webapp` contains configurations for viewing logs in the AWS UI.
+* GCP: 
+
+
 
 The App can be run locally or AWS or GCP. To run in AWS, upload WAR file, set the environment variables, and that's it. The .ebextensions folder in src/main/webapp contains configurations for viewing logs in the AWS UI. To run in GCP App Engine, use the GCP plugin for easy way, the environment variables are set in the appengine-web.xml.
 

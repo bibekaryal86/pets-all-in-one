@@ -1,4 +1,4 @@
-# pets-all-in-ne
+# pets-all-in-one
 Maven / Gradle Multi Module Single PETS app
 
 This is a monolith app uses Spring MVC with JSP, and combines most of the functionalities of the following five apps:
@@ -30,13 +30,9 @@ After creating the WAR file, the app can be run as:
 * Local: Use container like Tomcat. This can be used as well: https://github.com/bibekaryal86/simple-jetty-container
 * Docker: For local deployment, docker can be used as well, although this repo does not contain `Dockerfile`
 * AWS: Upload the WAR file to Elastic Beanstalk, set the environment variables, and that should be it. The `.ebextensions` folder in `src/main/webapp` contains configurations for viewing logs in the AWS UI.
-* GCP: 
+* GCP: Use `Cloud Tools for Eclipse` plugin for Eclipse for easiest way to deploy. It requires `appengine-web.xml` in the `WEB-INF` folder besides `web.xml` where environment variables should be set (DUMMY file with dummy passwords provided)
 
-
-
-The App can be run locally or AWS or GCP. To run in AWS, upload WAR file, set the environment variables, and that's it. The .ebextensions folder in src/main/webapp contains configurations for viewing logs in the AWS UI. To run in GCP App Engine, use the GCP plugin for easy way, the environment variables are set in the appengine-web.xml.
-
-Deployed to:
+This app is deployed to:
 * AWS: http://petsuimpa.us-east-1.elasticbeanstalk.com/home.pets
 * GCP: http://petsuimpa.appspot.com/home.pets
 
